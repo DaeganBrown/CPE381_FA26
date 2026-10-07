@@ -1,0 +1,942 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[aspectratio=169,xcolor=dvipsnames,svgnames,x11names,fleqn]{beamer}
+% \documentclass[aspectratio=169,xcolor=dvipsnames,fleqn]{beamer}
+
+\usetheme{RedVelvet}
+
+\usefonttheme[onlymath]{serif}
+
+
+
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{physics}
+% \usepackage{mathbb}
+\usepackage{rahul_math}
+\usepackage{bigints}
+\usepackage{hyperref}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{tikz,pgfplots}
+\usepackage{subfigure}
+\usetikzlibrary{arrows}
+\usepackage{minted}
+\definecolor{LightGray}{gray}{0.9}
+\definecolor{cream}{rgb}{0.92, 0.9, 0.55}
+\definecolor{lightblue}{rgb}{0.68, 0.85, 0.9}
+
+
+\usepackage{xcolor-material}
+\usetikzlibrary{fit}
+\tikzset{%
+apple/.pic={
+  \fill [MaterialBrown] (-1/8,0)  arc (180:120:1 and 3/2) coordinate [pos=3/5] (@)-- ++(1/6,-1/7)  arc (120:180:5/4 and 3/2) -- cycle;
+  \fill [MaterialLightGreen500] (0,-9/10)  .. controls ++(180:1/8) and ++(  0:1/4) .. (-1/3,  -1) .. controls ++(180:1/3) and ++(270:1/2) .. (  -1,   0) .. controls ++( 90:1/3) and ++(180:1/3) .. (-1/2, 3/4) .. controls ++(  0:1/8) and ++(135:1/8) .. (   0, 4/7)
+}
+}
+
+\newcommand{\leftdoublequote}{\textcolor{blue}{\scalebox{3}{``}}}
+
+\newcommand{\rightdoublequote}{\textcolor{blue}{\scalebox{3}{''}}}
+
+
+\usepackage{textcomp}
+\usepackage{fontawesome}
+
+\usepackage{overpic}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\usepackage{tikz-qtree,tikz-qtree-compat}
+\usetikzlibrary{calc}
+
+
+\title[CPE 381: Signals and Systems]{CPE 381: Fundamentals of Signals and Systems for Computer Engineers} % The short title appears at the bottom of every slide, the full title is only on the title page
+\subtitle{05 Fourier Transform}
+
+\author[Rahul Bhadani] {{\Large \textbf{Rahul Bhadani}}}
+
+\institute[UAH] % Your institution as it will appear on the bottom of every slide, maybe shorthand to save space
+{
+    Electrical \& Computer Engineering,  The University of Alabama in Huntsville
+}
+\date
+
+% \titlegraphic{
+%    \includegraphics[width=0.4\linewidth]{figures/UAH_primary.png}
+% }
+
+\begin{document}
+
+%-------------------------------------------------
+\begin{frame}
+\titlepage
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Outline}
+    \tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fourier Transform of an Aperiodic Signal}
+
+%-----------------------------------------
+
+\begin{frame}{}
+    \begin{center}
+    \Huge \bf \color{DarkBlue}
+    \faStar
+    
+Fourier Transform of an Aperiodic Signal
+
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Aperiodic Signal}
+
+    \begin{itemize}
+        \item Aperiodic signal can be thought of as a periodic signal with infinite fundamental frequency.
+\item In practice, there are no periodic signals, but they are nice mathematical tools.
+
+    \end{itemize}
+
+    $$
+    x(t)  = \lim_{T_0 \to \infty } \tilde{x} (t)
+    $$
+    
+\end{frame}
+
+
+\begin{frame}{From Fourier Series to Fourier Transform}
+
+Consider
+
+$$
+\tilde{x} (t) = \suminf{n} X_n e^{jn\Omega_0 t}, \quad \Omega_0 = \cfrac{2\pi}{T_0}
+$$
+
+and its Fourier coefficient is 
+
+    $$
+    X_n  = \cfrac{1}{T_0} \int_{-T_0/2}^{T_0/2} \tilde{x} (t)e^{-jn\Omega_0 t}dt
+    $$
+
+In the limiting case $T_0 \to \infty $, $X_n \to 0$, so to avoid it, $X(\Omega_n) = T_0 X_n$, and $\Omega_n = n\Omega_0$ are the harmonic frequencies. That is to say:
+
+\begin{tblock}{}
+$$
+    X_nT_0  = \int_{-T_0/2}^{T_0/2} \tilde{x} (t)e^{-j\Omega_n t}dt
+$$
+\end{tblock}
+\end{frame}
+
+\begin{frame}{From Fourier Series to Fourier Transform}
+    Rewriting $\Omega_0 = \Delta \Omega = \cfrac{2\pi}{T_0}$
+
+    $$
+\tilde{x} (t) = \suminf{n} X(\Omega_n) e^{j\Omega_n t} = \suminf{n} X(\Omega_n)e^{j\Omega_n t}\cfrac{\Delta \Omega}{2\pi}
+$$
+
+$$
+X(\Omega_n) =  \int_{-T_0/2}^{T_0/2} \tilde{x} (t)e^{-j\Omega_n t}dt
+$$
+
+As $T_0\to \infty$, $\Delta \Omega \to d\Omega$ and sum becomes integral. Thus $\Omega_n = n\Omega_0 = n\Delta \Omega \to \Omega$.
+
+\end{frame}
+
+
+\begin{frame}{Fourier Transform}
+Hence, in the limiting case, $T_0 \to \infty$,
+
+\begin{custombox}{Fourier Transform}{Tomato}{Purple}
+
+$$
+X(\Omega) = \intinf x(t) e^{-j \Omega t} dt
+$$
+\end{custombox}
+
+    \begin{custombox}{Inverse Fourier Transform}{Purple}{Tomato}
+
+$$
+x(t) = \cfrac{1}{2\pi}\intinf X(\Omega) e^{j \Omega t} d\Omega
+$$
+\end{custombox}
+
+    
+\end{frame}
+
+\begin{frame}{Obtaining Fourier Transform}
+    \begin{itemize}
+    
+    %    \item If a signal's Laplace transform includes $j\Omega$ axis in its ROC, then we can simply compute the Fourier Transform by first computing its Laplace transform and set $s = j\Omega$.
+    %    \item If $x(t)$ has a finite time support and in that support $x(t)$ is bounded, its Fourier transform exists. To find it use the integral definition or the Laplace transform of $x(t)$.
+\item If $x(t)$ is periodic, its Fourier transform is obtained using the signal's Fourier series.
+ \item For some functions, e.g. the integral is not well-defined, or has discontinuities then the integration formula cannot be used for calculating the Fourier transform. We will use properties of Fourier transform in such a case.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{}
+    \Large
+    \begin{center}
+        \textbf{It appears that almost nothing has a Fourier transform—nothing except practical communication signals. No signal amplitude goes to infinity and no signal lasts forever; therefore, no practical signal can have an infinite area under it, and hence all have Fourier transforms.}
+        
+        \hfill \textbf{-  \textit{E. Craig}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Frequency Content with Fourier Transform}
+    \begin{itemize}
+        \item The Fourier transform measures the frequency content of a signal.
+\item Time-domain vs Frequency-domain: The characterization in one domain provides information that is not clearly available in the other.
+
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}{Fourier Transform using Laplace Transform}
+%     For $X(\Omega)$ to exist,
+    
+%     \begin{itemize}
+%         \item  $x(t)$ must be absolutely integrable.
+%         \item $x(t)$ has only a finite number of discontinuities and a finite number of minima and maxima in any finite interval.
+%         \item ROC of its Laplace transform $X(s)$ must have $j\Omega$ axis.
+
+%         $$
+%         \Fcal[ x(t)] = \Lcal [x(t)]\bigg|_{s=j\Omega} = X(s)\bigg|_{s=j\Omega}
+%         $$
+%     \end{itemize}
+
+%    The duality between time and frequency allows the computation of Fourier transforms.
+    
+% \end{frame}
+
+% \begin{frame}{Fourier Transform of the Complex Exponential}
+
+% \begin{columns}
+%     \column{0.5\linewidth}
+%      $$e^{\j\Omega_0 t} = \cos (\Omega_0 t ) + j \sin (\Omega_0 t ) $$
+
+% The FT is obtained as follows:
+
+% $$
+% F(\Omega) = \intinf f(t) e^{-j\Omega t}dt = \intinf e^{\j\Omega_0 t}  e^{-j\Omega t}dt = \intinf e^{-t j(\Omega - \Omega_0)} dt
+% $$
+
+%     \column{0.5\linewidth}
+
+% The resultant integrated has both odd and even parts;
+
+%     $$
+%     F(\Omega) = 2\int_0^\infty \cos[ t\Omega - \Omega_0)] dt
+%     $$
+% \end{columns}
+   
+    
+% \end{frame}
+
+
+% \begin{frame}{Fourier Series from Laplace Transform }
+%     \begin{enumerate}
+%         \item 
+%         $x(t) = u(t)$, $X(s) =\cfrac{1}{c}$, ROC: $\sigma > 0$, $j\Omega$-axis is not included, FT cannot be obtained using Laplace transform.
+
+%     \item $x(t) = e^{-2t}u(t)$, $X(s) =\cfrac{1}{s +2}$, ROC: $\sigma > -2$, then
+
+%     $X(\Omega) = \cfrac{1}{s+2}\bigg|_{s=j\Omega} = \cfrac{1}{j\Omega+2}$
+
+%     \item $x(t) = e^{-|t|}$, $X(s) = \cfrac{1}{s+1} + \cfrac{1}{1-s}$, ROC: $-1< \sigma < 1$, then
+%     $X(\Omega) = X(s)\bigg|_{s=j\Omega} = \cfrac{2}{1 - (j \Omega)^2} = \cfrac{2}{1 + \Omega^2}$
+%     \end{enumerate}
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Properties of Fourier Transform}
+
+%-----------------------------------------
+
+\begin{frame}{}
+    \begin{center}
+    \Huge \bf \color{DarkBlue}
+    \faTachometer
+    
+   Properties of Fourier Transform
+
+\end{center}
+\end{frame}
+
+\begin{frame}{Linearity}
+
+    \begin{center}
+    \begin{gradgreen}
+        $$
+        \Fcal[ \alpha x(t) + \beta y(t)] = \alpha \Fcal[x(t)] + \beta\Fcal[y(t)] = \alpha X(\Omega) + \beta Y(\Omega)
+        $$
+    \end{gradgreen}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Fourier Transform of an Impulse Function}
+    \begin{multiequation}
+        x(t) & = \delta(t)\\
+        X(\Omega) & = \intinf \delta(t) e^{-j\Omega t}dt = e^{-j 0} = \intinf \delta(t) dt = 1, \quad -\infty < \Omega < \infty 
+    \end{multiequation}
+    Hence, if the delta function has finite support as seen, then its Fourier transform has infinite support in frequency.
+    \begin{gradgreen}
+        It means $\delta(t)$ changes so much in a very short time that its FT has all possible frequency components.
+    \end{gradgreen}
+\end{frame}
+
+\begin{frame}{Example}
+\vspace*{-6\baselineskip}
+\begin{custombox}{Fourier Transform}{Thistle}{MediumSpringGreen}
+
+        \large
+        
+    Find the Fourier transform of (i) $u(t)$, (iii) $p(t) = u(t) - u(t-1)$
+    
+\end{custombox}
+\end{frame}
+
+\begin{frame}{}
+\vspace*{-9\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+
+
+
+\begin{frame}{Duality Property}
+Inverse Fourier Transform:
+    $$
+    x(t) = \cfrac{1}{2\pi} \intinf X(\rho) e^{j\rho t}d\rho
+    $$
+    Replacing $t$ with $-\Omega$,
+    $$
+    2\pi x(-\Omega) = \intinf X(\rho) e^{-j\rho \Omega}d\rho = \intinf X(t) e^{-j \Omega t} dt = \Fcal[X(t)]
+    $$
+    after replacing $\rho$ with $t$ as they are dummy variables. Hence
+    \begin{gradred}
+       $$ X(t) \Leftrightarrow 2\pi X(-\Omega)$$
+    \end{gradred}
+\end{frame}
+
+\begin{frame}{Fourier Transform of a Constant Signal}
+\begin{multiequation}
+    x(t) & = A, \quad -\infty < t < \infty 
+\end{multiequation}    
+
+As, it is a constant, natural $\Omega = 0$ is the frequency. We cannot find its frequency in the usual way it is not absolutely integrable. Then we can the \textbf{duality property}.
+
+\begin{multiequation}
+    \delta(t) & \Leftrightarrow 1\\
+    A\delta(t) & \Leftrightarrow A\\
+    A & \Leftrightarrow 2\pi A \delta(-\Omega) = 2\pi  A\delta(\Omega) 
+\end{multiequation}
+Notice the last step because $\delta$ is an even function.
+\end{frame}
+
+\begin{frame}{Fourier Transform of Shifted Delta and Cosines}
+
+\begin{custombox}{Shifted Delta}{Yellow}{Orange}
+\small
+\begin{multiequation}
+    \delta(t - b) + \delta(t + b) \Leftrightarrow e^{-jb\Omega } + e^{jb\Omega } = 2\cos(b\Omega)
+\end{multiequation}
+% Apply Laplace Transform to $\delta(t\pm b)$, and set $s = j\Omega$, and $\delta(t) \leftrightarrow 1$.
+\end{custombox}
+
+\begin{custombox}{Cosine}{Orange}{Yellow}
+    We use duality property:
+    \begin{multiequation}
+        2\cos ( b t) & \Leftrightarrow 2\pi [\delta(\Omega - b) + \delta(\Omega + b) ]\\
+        \cos ( b t) & \Leftrightarrow \pi [\delta(\Omega - b) + \delta(\Omega + b) ]
+    \end{multiequation}
+\end{custombox}
+\end{frame}
+
+\begin{frame}{Example}
+   Use duality to find the Fourier transform of $x(t) = 10\textrm{sinc}(0.5t)$. 
+\end{frame}
+\begin{frame}{}
+\vspace*{-9\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{}
+\vspace*{-9\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{}
+\vspace*{-9\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+
+
+\begin{frame}{Time Frequency Inverse Proportionality}
+    Support of $X(\Omega)$ is inversely proportional to the support of $x(t)$.
+If $x(t)$ has Fourier transform $X(\Omega)$ , and $\alpha \neq 0$, a real number, then
+
+$x(\alpha t)$
+\begin{itemize}
+    \item is a contracted signal when $\alpha > 1$
+    \item, is a contracted and reflected signal when $\alpha < -1$
+    \item is an expanded signal when $0 < \alpha < 1$
+    \item is an expanded and reflected signal when $-1< \alpha < 0$
+    \item reflect signal when $\alpha = -1$
+\end{itemize}
+and,
+$$
+x(\alpha t) \leftrightarrow \cfrac{1}{|\alpha|}X(\cfrac{\Omega}{\alpha})
+$$
+    
+\end{frame}
+
+\begin{frame}{Inverse Proportionality of Time and Frequency: Example 1}
+    \begin{center}
+        \includegraphics[width=0.7\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/Fourier_Transform_Rect.pdf}
+
+        Notice that the wider the pulse the more concentrated in frequency its Fourier transform.
+\footnotesize
+        Code: \url{https://github.com/rahulbhadani/CPE381_FA26/blob/main/Code/Ch05_fourier_transform_rect.m}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{Inverse proportionality of time and frequency: Example 2}
+    Consider a pulse $x(t) = u(t) - u(t-1)$. Find its Fourier transform, and the Fourier Transform of $x(2t)$.
+
+
+\end{frame}
+
+\begin{frame}{Inverse proportionality of time and frequency: Example 2}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Inverse proportionality of time and frequency: Example 2}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Inverse proportionality of time and frequency: Example 2}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Inverse proportionality of time and frequency: Example 2}
+
+    \begin{center}
+        \includegraphics[width=0.7\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/Fourier_Transform_Expanded.pdf}
+
+$x(t)$ has finite support, while $X(\Omega)$ has infinite support.
+
+\footnotesize
+        Code: \url{https://github.com/rahulbhadani/CPE381_FA26/blob/main/Code/Ch05_FourierTransform_Rect_Expanded.m}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Example 3}
+    Apply the reflection property to find the Fourier transform of $x(t) = e^{-a|t|}$, $a>0$.
+\end{frame}
+
+\begin{frame}{Example 3}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Example 3}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Example 3}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+\begin{frame}{Example 3}
+
+\begin{columns}
+    \column{0.7\linewidth}
+     \begin{center}
+        \includegraphics[width=0.66\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/Fourier_Transform_ExpAbs.pdf}
+        \end{center}
+       
+
+ \footnotesize
+        Code: \url{https://github.com/rahulbhadani/CPE381_FA26/blob/main/Code/Ch05_FourierTransform_Exp_Abs.m}
+        
+         \column{0.3\linewidth}
+           From this plot, we see that its energy is concentrated mostly in low frequencies, hence the signal is called \textbf{low-pass}.
+\end{columns}   
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Spectral Representation}
+
+%-----------------------------------------
+
+\begin{frame}{}
+    \begin{center}
+    \Huge \bf \color{DarkBlue}
+    \faSpinner
+    
+  Spectral Representation
+
+\end{center}
+\end{frame}
+
+\begin{frame}{Modulation}
+
+$$
+\Fcal[x(t)e^{j\Omega_0 t}] = \intinf [x(t)e^{j\Omega_0 t}]e^{-j\Omega t} dt = \int x(t)e^{j(\Omega - \Omega_0) t}] dt = X(\Omega - \Omega_0)
+$$
+Then applying frequency shifting property to $x(t)\cos(\Omega_0 t)$, we have
+$$
+x(t)\cos(\Omega_0 t) \Leftrightarrow 0.5 [ X(\Omega - \Omega_0) + X(\Omega - \Omega_0)]
+$$
+
+Here, $x(t)$ is the main signal, called the \textbf{message}, $\cos(\Omega_0 t)$ is called the \textbf{carrier}, and  $x(t)\cos(\Omega_0 t)$ is the \textbf{modulated signal}.
+
+The scheme discussed is called Amplitude Modulation
+\end{frame}
+
+
+\begin{frame}{Why Amplitude Modulation?}
+    \begin{itemize}
+        \item Music signals are audible at up to 22 KHz, while speech signals are at 100 Hz - 5 KHz. They are relatively low frequency.
+        \item The length of an antenna that is used to radiate the signal is a quarter of a wavelength, given by 
+        $$
+        \lambda = \cfrac{c}{f}~~ meter
+        $$
+        $c= 3\times 10^8 m/s$ is the speed of light, and $f$ is the frequency in Hz of the signal to be radiated. 
+        \item Assuming $f = 30$ KHz, normal for music and speech with some noise, the $\lambda \approx 10$ km, hence antenna size would be $2.5$ km. A very giant antenna.
+        \item Choosing an appropriate modulation frequency helps in reducing the size of the antenna.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Fourier Transform of Periodic Signals}
+If the function is periodic, we know that it can be represented as a Fourier series, i.e.
+$$
+x(t) = \suminf{k} X_k e^{j\Omega_k t}
+$$
+where 
+$$
+X_k = \cfrac{1}{T} \intinf x(t) e^{-j\Omega_k t} dt
+$$
+From the linearity and frequency-shifting property, we can write
+$$
+X(\Omega) = \sum_k \Fcal [ X_k e^{j\Omega_k t}] = \sum_k 2\pi X_k \delta(\Omega - \Omega_k)
+$$
+$\Omega_k = k\Omega_0$.
+
+\end{frame}
+
+\begin{frame}{Example 4}
+    Consider a periodic signal  $x(t)$ with a period $x_1(t) = r(t) - 2r(t-0.5) + r(t-1)$. Its fundamental frequency is $\Omega_0 = 2\pi$. Determine its Fourier transform analytically and using MATLAB.
+\end{frame}
+
+\begin{frame}{Example 4}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Example 4}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+
+
+\begin{frame}{Parseval's Energy Relationship}
+
+  \begin{multiequation}
+        E_x & = \intinf |x(t)|^2 dt = \intinf x(t)x^*(t) dt = \intinf x(t) \bigg[  \cfrac{1}{2\pi}\intinf X^*(\Omega) e^{-j \Omega t} d\Omega \bigg]dt\\
+        & =  \cfrac{1}{2\pi}\intinf X^*(\Omega)  \bigg[ \intinf x(t) e^{-j \Omega t} dt\bigg] d\Omega = \cfrac{1}{2\pi} \intinf |X(\Omega)|^2 d\Omega
+  \end{multiequation}
+
+  Thus  $|X(\Omega)|^2$  is an energy density—indicating the amount of energy at each of the frequencies.  The plot $|X(\Omega)|^2$ vs. is called the energy spectrum of $x(t)$, and displays how the energy of the signal is distributed over frequency.
+  
+\end{frame}
+
+\begin{frame}{Example 5: Pulse Signal and its Energy}
+    Consider $p(t) = u(t+1) - u(t-1)$, use its Fourier transform $P(\Omega)$ and Parseval's energy relation to show that 
+
+    $$
+    \intinf \bigg( \cfrac{\sin(\Omega)}{\Omega} \bigg)^2 d\Omega = \pi
+    $$
+    
+\end{frame}
+
+
+\begin{frame}{Example 5: Pulse Signal and its Energy}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Example 5: Pulse Signal and its Energy}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+
+
+\begin{frame}{Spectral Representation}
+    \begin{itemize}
+        \item Magnitude spectrum: $|X(\Omega)|$ vs $\Omega$: even function
+        \item Phase spectrum: $\angle X(\Omega)$ vs $\Omega$: odd function
+        \item Energy/Power spectrum: $|X(\Omega)|^2$ vs $\Omega$: even function
+    \end{itemize}
+\end{frame}
+
+
+% \begin{frame}{Spectral Representation of Sine Function}
+    
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Filtering}
+
+%-----------------------------------------
+
+\begin{frame}{}
+    \begin{center}
+    \Huge \bf \color{DarkBlue}
+    \faFlask
+    
+ Filtering
+
+\end{center}
+\end{frame}
+
+\begin{frame}{Frequency Response}
+    $H(j\Omega)$ (or $H(\Omega)$ ) is the frequency response of the system. Thus,
+    $$
+    y(t) = \cfrac{1}{2\pi} \intinf [ X(\Omega)H(\Omega)]e^{j\Omega t}d\Omega =  \cfrac{1}{2\pi} \intinf [ Y(\Omega)]e^{j\Omega t}d\Omega
+    $$
+    Thus $Y(\Omega) = X(\Omega)H(\Omega)$
+    For a periodic signal $X(\Omega) = \suminf{k} 2\pi X_k \delta(\Omega - \Omega_k)$,
+
+    $$
+    Y(\Omega) =  X(\Omega)H(\Omega) =  \suminf{k} 2\pi X_kH(\Omega_k) \delta(\Omega - \Omega_k)
+    $$
+    Thus Fourier coefficient of the output $y(t)$ is $Y_k = X_k H(\Omega_k)$.
+\end{frame}
+
+\begin{frame}{Filtering}
+    In practice $s(t)  = x(t) + \eta(t)$, where $\eta$ is the noise. We want to get rid of noise. So we design a special system called \textbf{Filters} that will by assuming that noise has certain frequencies, and filters will remove those frequencies.
+
+    The problem of filtering is finding the frequency response $H(\Omega)$ of the filter.
+\end{frame}
+
+\begin{frame}{Example 6: From Full-wave Rectifier to DC Source}
+Let $x(t) = |\cos(\pi t) | $ is a full-wave rectifier be an input to a filter $H(\Omega)$, and the output is a DC signal. What should  $H(\Omega)$ look like?
+    
+\end{frame}
+
+\begin{frame}{Example 6: From Full-wave Rectifier to DC Source}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Example 6: From Full-wave Rectifier to DC Source}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Example 6: From Full-wave Rectifier to DC Source}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+\begin{frame}{Low Pass Filters}
+    \begin{custombox}{Ideal Low Pass Filter}{Pink}{SeaGreen}
+        A filter that keeps low frequencies is called a low-pass filter.
+The magnitude response of an ideal low-pass filter is
+\begin{multiequation}
+    |H_{\ell p}(\Omega)| = \begin{cases}
+        1 , \quad -\Omega_1 \leq \Omega \leq\Omega_1\\
+        0, \quad \text{otherwise}
+    \end{cases}
+\end{multiequation}
+and the frequency response is 
+$
+    \angle H_{\ell p}(\Omega) = -\alpha\Omega
+$ which is a linear phase.
+ \begin{itemize}
+        \item $\Omega_1$ is called cut-off frequency.
+    \end{itemize}
+    \end{custombox}
+   
+\end{frame}
+
+\begin{frame}{Band-pass Filter}
+    \begin{custombox}{Ideal Band-pass Filter}{Orange}{Green}
+        \textit{Keeps a band of frequencies}
+        
+        Magnitude Response:
+        \begin{multiequation}
+            |H_{bp}(\Omega) =  \begin{cases}
+        1 , \quad \Omega_1 \leq \Omega \leq\Omega_2 \text{~~and~~}  -\Omega_2 \leq \Omega \leq -\Omega_1 \\
+        0, \quad \text{otherwise}
+    \end{cases}
+        \end{multiequation}
+        Its phase is also linear in the pass band.
+    \end{custombox}
+\end{frame}
+
+\begin{frame}{High-pass Filter}
+    \begin{custombox}{Ideal High-pass Filter}{Indigo}{Red}
+        \textit{Keeps only high frequencies}
+        
+        Magnitude Response:
+        \begin{multiequation}
+            |H_{hp}(\Omega) =  \begin{cases}
+        1 , \quad \Omega \geq\Omega_2 \text{~~and~~}  -\Omega \leq -\Omega_2 \\
+        0, \quad \text{otherwise}
+    \end{cases}
+        \end{multiequation}
+         Its phase is also linear in the pass band.
+    \end{custombox}
+
+    An ideal multi-band filter can be obtained by a combination of low, high, and band-pass filter.
+\end{frame}
+
+\begin{frame}{Band-stop Filter (Band-eliminating Filter) }
+    
+ \begin{custombox}{Ideal High-pass Filter}{Red}{Yellow}
+        \textit{Removes a range of frequencies}
+        
+        Magnitude Response:
+        \begin{multiequation}
+            |H_{be}(\Omega) = 1 - |H_{bp}(\Omega)|
+        \end{multiequation}
+         Its phase is also linear in the pass band.
+    \end{custombox}
+\end{frame}
+
+\begin{frame}{Magnitude Response of Filter}
+        \begin{center}
+        \includegraphics[width=0.66\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/MagnitudeResponse.png}
+        \end{center}
+       
+\end{frame}
+
+% \begin{frame}{Frequency Response from Poles and Zeros}
+%     Consider a transfer function of the form $G(s) = K \cfrac{ s - z}{s - p}$where $K \neq 0$, and $p$ is a pole, $z$ is a zero. Frequency response at some frequency $\Omega_0$ is obtained by setting $s = j\Omega_0$.
+% Hence,
+% $$
+% G(\Omega) = K\cfrac{j\Omega _0 - z}{j\Omega_0 - p} = K\cfrac{\vec{Z}(\Omega_0)}{\vec{P}(\Omega_0)} =|K| e^{j\angle K}\cfrac{|\vec{Z}(\Omega_0)|}{|\vec{P}(\Omega_0)|} e^{j (\angle \vec{Z}(\Omega_0) - \angle \vec{P}(\Omega_0) ) }
+% $$
+% Magnitude response is then 
+% $$
+% |G(\Omega) | = |K| \cfrac{|\vec{Z}(\Omega_0)|}{|\vec{P}(\Omega_0)|}
+% $$
+% and the phase response as
+% $$
+% \angle G(\Omega ) = \angle K  + \angle \vec{Z}(\Omega_0) - \angle \vec{P}(\Omega_0)
+% $$
+    
+% \end{frame}
+
+% \begin{frame}{Frequency Response from Poles and Zeros}
+% \footnotesize
+%     \begin{itemize}
+%         \item Poles create $j\Omega$ at frequencies in the $j\Omega$-axis in front of the imaginary parts of the poles. The closer the pole is to the $j\Omega$-axis, the narrower and higher the hill. If, for instance, the poles are on the $j\Omega$-axis (this would correspond to an unstable and useless filter) the magnitude response at the frequencies of the poles will be infinity.
+%         \item Zeros create \textbf{valleys} at the frequencies in the $j\Omega$-axis in front of the imaginary parts of the zeros. The closer a zero is to the $j\Omega$-axis approaching it from the left or the right (as the zeros are not restricted by stability to be in the open left-hand s-plane) the closer the magnitude response is to zero. If the zeros are on the $j\Omega$-axis, the magnitude response at the frequencies of the zeros is zero.
+%     \end{itemize}
+
+%      \begin{center}
+%         \includegraphics[width=0.25\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/polezero_frequencies.png}
+%         \end{center}
+% \end{frame}
+
+
+% \begin{frame}{Power Spectral Density (PSD)}
+%     \begin{custombox}{Definition}{Peach}{Emerald}
+%         A Power Spectral Density (PSD) is the measure of a signal's power content versus frequency. It is the distribution of the average power of a signal in the frequency domain. Mathematically,
+%         $$
+%         S(\Omega) = \lim_{\tau \to \infty} \frac{|X(\Omega)|^2}{\tau}
+%         $$
+%         $\tau$ represents the time interval or duration over which the signal is observed or measured. It is often referred to as the "observation time" or "integration time".
+        
+%     \end{custombox}
+% \textbf{Why should we care about PSD?}
+
+% Understanding how the strength of a signal is distributed in the frequency domain, relative to the strengths of other ambient signals, is central to the design of any LTI filter intended to extract or suppress the signal.
+
+% \end{frame}
+
+\begin{frame}[containsverbatim, allowframebreaks]{Filtering a Real Signal}
+    Consider a data file that contains a timestamp and speed in \textit{km/h}. We will convert it to \textbf{m/s} first.
+     \begin{center}
+        \includegraphics[width=0.77\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/Speed.pdf}
+        \end{center}
+
+            \begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=LightGray,
+fontsize=\footnotesize
+]
+{matlab}
+csv_file = '../Data/vel.csv';
+data = readtable(csv_file);
+data.Time = data.Time - data.Time(1);
+% Convert the velocity data to m/s
+velocity_ms = data.Message * 1000 / 3600;
+\end{minted}
+
+Compute Fourier Transform using FFT and Plot Magnitude Spectrum, we plot the magnitude spectrum in Decibel (20*log10) for clarity.
+
+   \begin{center}
+        \includegraphics[width=0.66\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/Speed_MagnitudeSpectrum.pdf}
+        \end{center}
+
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=LightGray,
+fontsize=\footnotesize
+]
+{matlab}
+% Compute the Fourier transform of the velocity data
+fs = 1 / mean(diff(data.Time));  % sampling frequency
+velocity_fft = fft(velocity_ms);
+
+% Plot the magnitude spectrum
+f = figure;
+f.Position = [ 810         819        1320         419];
+plot((0:length(velocity_fft)-1) * fs / length(velocity_fft), 20*log10(abs(velocity_fft)));
+\end{minted}
+
+
+   \begin{center}
+        \includegraphics[width=0.66\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/Phase_Spectrum.pdf}
+        \end{center}
+
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=LightGray,
+fontsize=\footnotesize
+]
+{matlab}
+% Compute the Fourier transform of the velocity data
+fs = 1 / mean(diff(data.Time));  % sampling frequency
+velocity_fft = fft(velocity_ms);
+
+% Plot the phase spectrum
+f = figure;
+f.Position = [ 810         819        1320         419];
+plot((0:length(velocity_fft)-1) * fs / length(velocity_fft), angle(velocity_fft));
+\end{minted}
+
+
+Now, we design a filter
+
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=LightGray,
+fontsize=\footnotesize
+]
+{matlab}
+cutoff_freq = 5;  % Hz
+order = 4;
+
+% Normalize the cutoff frequency to the Nyquist frequency
+% Design the low-pass filter
+[b, a] = butter(order, cutoff_freq / (fs/2), 'low')
+
+% Apply the filter to the velocity data
+velocity_filtered = filter(b, a, velocity_ms);
+\end{minted}
+
+b = [0.0003,   0.0013,   0.0019, 0.0013,  0.0003]
+
+a = [1.0000,  -3.2380,  3.9911, -2.2127,  0.4647]
+
+\begin{center}
+        \includegraphics[width=0.77\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/SpeedFiltered.pdf}
+        \end{center}
+
+\begin{center}
+        \includegraphics[width=0.77\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/FilteredSpeed_MagnitudeSpectrum.pdf}
+        \end{center}
+
+    \begin{center}
+        \includegraphics[width=0.77\linewidth, trim={0cm 0.0cm 0cm 0.0cm},clip]{figures/FilteredSpeed_Phase_Spectrum.pdf}
+        \end{center}
+
+    Full code at \url{https://github.com/rahulbhadani/CPE381_FA26/blob/main/Code/Ch05_speed_fourier.m}
+\end{frame}
+
+
+
+\begin{frame}{Time-shift Properties}
+    $$
+    x(t \pm t_0) \Leftrightarrow X(\Omega)e^{\pm j \Omega t_0} 
+    $$
+\end{frame}
+
+\begin{frame}{Differentiation Property}
+    $$
+    \cfrac{d^N x(t)}{dt ^N} \Leftrightarrow (j\Omega)^N X(\Omega)
+    $$
+\end{frame}
+
+\begin{frame}{Integration Property}
+    $$
+    \int_{-\infty}^t x(\sigma) d\sigma \Leftrightarrow \cfrac{X(\Omega)}{j\Omega} + \pi X(0)\delta(\Omega)
+    $$
+    where $X(0) = \intinf x(t)dt$
+\end{frame}
+
+\begin{frame}{Integration Property}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Integration Property}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+\begin{frame}{Integration Property}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+
+\begin{frame}{Example 7: Fourier Transform of Triangular Pulse}
+    $$x(t) = r(t) - 2r(t-1) + r(t-2)$$
+    Find the Fourier transform of $x(t)$ using the derivative property.
+    
+\end{frame}
+
+\begin{frame}{Example 7: Fourier Transform of Triangular Pulse}
+\vspace*{-7\baselineskip}
+    \color{LightGray}{Blank space for calculation}
+\end{frame}
+
+
+
+\begin{frame}{Fourier Optics}
+
+    \Large
+    \begin{center}
+        \url{https://www.youtube.com/watch?v=EGYVquku8r4}
+    \end{center}
+\end{frame}
+
+
+\end{document}
