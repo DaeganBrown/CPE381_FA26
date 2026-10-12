@@ -327,7 +327,7 @@ Inverse Fourier Transform:
     $$
     after replacing $\rho$ with $t$ as they are dummy variables. Hence
     \begin{gradred}
-       $$ X(t) \Leftrightarrow 2\pi X(-\Omega)$$
+       $$ X(t) \Leftrightarrow 2\pi x(-\Omega)$$
     \end{gradred}
 \end{frame}
 
@@ -560,7 +560,7 @@ $\Omega_k = k\Omega_0$.
         & =  \cfrac{1}{2\pi}\intinf X^*(\Omega)  \bigg[ \intinf x(t) e^{-j \Omega t} dt\bigg] d\Omega = \cfrac{1}{2\pi} \intinf |X(\Omega)|^2 d\Omega
   \end{multiequation}
 
-  Thus  $|X(\Omega)|^2$  is an energy density—indicating the amount of energy at each of the frequencies.  The plot $|X(\Omega)|^2$ vs. is called the energy spectrum of $x(t)$, and displays how the energy of the signal is distributed over frequency.
+  Thus  $|X(\Omega)|^2$  is an energy density—indicating the amount of energy at each of the frequencies.  The plot $|X(\Omega)|^2$ vs. frequency is called the energy spectrum of $x(t)$, and displays how the energy of the signal is distributed over frequency.
   
 \end{frame}
 
@@ -678,7 +678,7 @@ $ which is a linear phase.
         
         Magnitude Response:
         \begin{multiequation}
-            |H_{bp}(\Omega) =  \begin{cases}
+            |H_{bp}(\Omega)| =  \begin{cases}
         1 , \quad \Omega_1 \leq \Omega \leq\Omega_2 \text{~~and~~}  -\Omega_2 \leq \Omega \leq -\Omega_1 \\
         0, \quad \text{otherwise}
     \end{cases}
@@ -693,7 +693,7 @@ $ which is a linear phase.
         
         Magnitude Response:
         \begin{multiequation}
-            |H_{hp}(\Omega) =  \begin{cases}
+            |H_{hp}(\Omega)| =  \begin{cases}
         1 , \quad \Omega \geq\Omega_2 \text{~~and~~}  -\Omega \leq -\Omega_2 \\
         0, \quad \text{otherwise}
     \end{cases}
@@ -711,7 +711,7 @@ $ which is a linear phase.
         
         Magnitude Response:
         \begin{multiequation}
-            |H_{be}(\Omega) = 1 - |H_{bp}(\Omega)|
+            |H_{be}(\Omega)| = 1 - |H_{bp}(\Omega)|
         \end{multiequation}
          Its phase is also linear in the pass band.
     \end{custombox}
